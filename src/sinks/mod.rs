@@ -112,6 +112,8 @@ pub mod webhdfs;
 pub mod websocket;
 #[cfg(feature = "sinks-websocket-server")]
 pub mod websocket_server;
+#[cfg(feature = "sinks-parseable")]
+pub mod parseable;
 
 pub use vector_lib::{config::Input, sink::VectorSink};
 
