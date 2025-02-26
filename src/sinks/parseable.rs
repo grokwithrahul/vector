@@ -32,9 +32,14 @@ pub struct ParseableConfig {
 
     #[configurable(derived)]
     pub auth: Option<Auth>,
-    
+
     ///The Parseable stream to send log events to.
+    #[configurable(derived)] 
     stream: String,
+    
+    #[configurable(derived)]
+    #[serde(default)]
+    method: HttpMethod,
 
     #[configurable(derived)]
     #[serde(default)]
@@ -90,7 +95,7 @@ impl SinkConfig for ParseableConfig {
             uri: self.uri.clone(),
             compression: self.compression,
             auth: self.auth.clone(),
-            method: HttpMethod::Post,
+            method: self.method.clone(),
             tls: self.tls.clone(),
             request,
             acknowledgements: self.acknowledgements,
@@ -122,7 +127,7 @@ impl SinkConfig for ParseableConfig {
 
 #[cfg(test)]
 mod test { 
-//    use hyper::{Method};
+    use hyper::{Method};
     use super::*;
     use vector_lib::event::{BatchNotifier, BatchStatus};
     use crate::{
@@ -185,7 +190,7 @@ mod test {
             method = "put"
         "#,
             |parts| {
-//                assert_eq!(Method::PUT, parts.method);
+                assert_eq!(Method::PUT, parts.method);
                 assert_eq!("/frames", parts.uri.path());
                 assert_eq!(
                     Some("test-stream"),
